@@ -79,7 +79,6 @@ def addRoom():
         cursor.close()
         connection.close()
 
-
 @app.route('/booking/add', methods=['POST'])
 def addBooking():
     """
@@ -194,10 +193,10 @@ def getBookingsMadeOnARoom(roomId):
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM RoomBookings WHERE roomId=%s", roomId)
-        row = cursor.fetchone()
+        row = cursor.fetchall()
         if row is None:
             return 'Room not found'
-        response = jsonify(str(row))
+        response = jsonify(row)
         response.status_code = 200
         return response
 
