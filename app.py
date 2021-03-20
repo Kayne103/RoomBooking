@@ -118,9 +118,8 @@ def addBooking():
 """
 Read operations.
 """
-
 @app.route('/rooms', methods=['GET'])
-def rooms():
+def getAllRooms():
     """
     Retrieve details of all rooms.
     :return: JSON object.
@@ -141,7 +140,6 @@ def rooms():
     finally:
         cursor.close()
         connection.close()
-
 
 @app.route('/rooms/<int:roomId>', methods=['GET'])
 def getRoom(roomId):
@@ -166,9 +164,8 @@ def getRoom(roomId):
         cursor.close()
         connection.close()
 
-
 @app.route('/bookings', methods=['GET'])
-def bookings():
+def getAllBookings():
     """
     Retrieve details of all bookings
     :return: JSON object
@@ -188,7 +185,6 @@ def bookings():
     finally:
         cursor.close()
         connection.close()
-
 
 @app.route('/room/bookings/<int:roomId>', methods=['GET'])
 def getBookingsMadeOnARoom(roomId):
@@ -217,7 +213,7 @@ def getBookingsMadeOnARoom(roomId):
         connection.close()
 
 @app.route('/users', methods=['GET'])
-def users():
+def getAllUsers():
     """
     Retrieve all users.
     :return: JSON object💁
@@ -239,7 +235,6 @@ def users():
     finally:
         cursor.close()
         connection.close()
-
 
 @app.route('/user/<int:userId>', methods=['GET'])
 def getUser(userId):
@@ -266,26 +261,87 @@ def getUser(userId):
         cursor.close()
         connection.close()
 
-
-@app.route('/user/bookings/<string:username>', methods=['GET'])
-def getBookingsMadeByUser(userId):
+"""
+Update operations.
+"""
+@app.route('/user/update/<int:userId>', methods=['UPDATE'])
+def updateUserPassword(userId):
     """
-    Retrieve all bookings made by a given user.
-    :param userId:
-    :return: JSON object💁
+    Update user password.
+    :return:
     """
     connection = None
     cursor = None
     try:
-        connection = mysql.connect()
-        cursor = connection.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM RoomBookings WHERE userId=%s", userId)
-        row = cursor.fetchone()
-        if row is None:
-            return 'No bookings made by such user'
-        response = jsonify(row)
-        response.status_code = 200
-        return response
+        password = request.args.get("password")
+        if password and request.method == 'POST':
+            sql = "UPDATE Users SET password=%s WHERE userId=%s"
+            data = (userId, password)
+            connection = mysql.connect()
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            cursor.execute(sql, data)
+            connection.commit()
+            response = jsonify('Password updated successfully!')
+            response.status_code = 200
+            return response
+        else:
+            return None
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        connection.close()
+
+@app.route('/room/update/<int:roomId>', methods=['UPDATE'])
+def updateRoomCapacity(roomId):
+    """
+    Update room capacity.
+    :return:
+    """
+    connection = None
+    cursor = None
+    try:
+        capacity = request.args.get("password")
+        if capacity and request.method == 'POST':
+            sql = "UPDATE Rooms SET capactiy=%s WHERE roomId=%s"
+            data = (roomId, capacity)
+            connection = mysql.connect()
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            cursor.execute(sql, data)
+            connection.commit()
+            response = jsonify('Room updated successfully!')
+            response.status_code = 200
+            return response
+        else:
+            return None
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        connection.close()
+
+@app.route('/booking/update/<int:bookingId>', methods=['UPDATE'])
+def updateBookingRoomNumber(bookingId):
+    """
+    Change room number.
+    :return:
+    """
+    connection = None
+    cursor = None
+    try:
+        roomId = request.args.get("roomId")
+        if roomId and request.method == 'POST':
+            sql = "UPDATE RoomBookings SET roomId=%s WHERE bookingId=%s"
+            data = (bookingId, roomId)
+            connection = mysql.connect()
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            cursor.execute(sql, data)
+            connection.commit()
+            response = jsonify('Booking updated successfully!')
+            response.status_code = 200
+            return response
+        else:
+            return None
     except Exception as e:
         print(e)
     finally:
@@ -295,11 +351,10 @@ def getBookingsMadeByUser(userId):
 """
 Delete operations.
 """
-
 @app.route('/users/delete/<int:userId>', methods=['DELETE'])
 def deleteUser(userId):
     """
-    Delete a given user by username
+    Delete a given user
     """
     connection = None
     cursor = None
@@ -309,7 +364,7 @@ def deleteUser(userId):
         resultValue = cursor.execute("DELETE FROM Users WHERE userId = %s", (userId,))
         connection.commit()
         if resultValue > 0:
-            response = jsonify('{username} deleted successfully!!!')
+            response = jsonify('deleted successfully!!!')
             response.status_code = 200
             return response
         else:
@@ -333,7 +388,7 @@ def deleteRoom(roomId):
         resultValue = cursor.execute("DELETE FROM Rooms WHERE roomId = %s", roomId)
         connection.commit()
         if resultValue > 0:
-            response = jsonify('Room details of room {} deleted Successfully!!!'.format(roomId))
+            response = jsonify('Room deleted Successfully!!!'.format(roomId))
             response.status_code = 200
             return response
         else:
@@ -344,9 +399,8 @@ def deleteRoom(roomId):
         cursor.close()
         connection.close()
 
-
-@app.route('/bookings/delete/<int:userId>', methods=['DELETE'])
-def deleteBookings(userId):
+@app.route('/bookings/delete/<int:bookingId>', methods=['DELETE'])
+def deleteBooking(bookingId):
     """
     Delete all bookings made by a given user
     """
@@ -355,39 +409,14 @@ def deleteBookings(userId):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        resultValue = cursor.execute("DELETE FROM RoomBookings WHERE userId = %s", userId)
+        resultValue = cursor.execute("DELETE FROM RoomBookings WHERE bookingId = %s", bookingId)
         connection.commit()
         if resultValue > 0:
-            response = jsonify('All bookings made by {} Deleted Successfully!!!'.format(userId))
+            response = jsonify('Booking deleted Successfully!!!'.format(userId))
             response.status_code = 200
             return response
         else:
-            return 'No bookings made by such user'
-    except Exception as e:
-        print(e)
-    finally:
-        cursor.close()
-        connection.close()
-
-
-@app.route('/bookings/delete <int:roomId>', methods=['DELETE'])
-def deleteBooking(roomId):
-    """
-    Delete all bookings hosted in a specific room
-    """
-    cursor = None
-    connection = None
-    try:
-        connection = mysql.connect()
-        cursor = connection.cursor(pymysql.cursors.DictCursor)
-        resultValue = cursor.execute("DELETE FROM RoomBookings WHERE roomId = %s", roomId)
-        connection.commit()
-        if resultValue > 0:
-            response = jsonify('deleted successfully!!!'.format(roomId))
-            response.status_code = 200
-            return response
-        else:
-            return 'No bookings made in that room'
+            return 'No such booking'
     except Exception as e:
         print(e)
     finally:
