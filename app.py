@@ -1,4 +1,4 @@
-from flask import request, jsonify, render_template
+from flask import request, jsonify
 from  config import app, mysql
 import pymysql
 
@@ -12,7 +12,7 @@ def index():
     This is the root endpoint.
     :return: The landing page 🛬 of the platform.
     """
-    return render_template('index.html')
+    return "<h1>Welcome to Cookie Session Room Booking API!!</h1>"
 
 """
 Create operations
