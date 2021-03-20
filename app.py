@@ -89,18 +89,13 @@ def addBooking():
     connection = None
     cursor = None
     try:
-        username = request.args.get("userId")
+        userId = request.args.get("userId")
         roomId = request.args.get("roomId")
-        bookingDay = request.args.get("bookingDay")
-        startTime = request.args.get("startTime")
-        endTime = request.args.get("endTime")
-        bookedFor = request.args.get("bookedFor")
-        meetingStatus = request.args.get("meetingStatus")
 
         if request.method == 'POST':
             sql = "insert into " \
-                  "RoomBookings(userId, roomId, booking_day, start_time, end_time, booked_for, meeting_status) values (%s,%s, %s, %s)"
-            data = (username, roomId, bookingDay, startTime, endTime, bookedFor, meetingStatus)
+                  "RoomBookings(userId, roomId) values (%s,%s)"
+            data = (userId, roomId)
             connection = mysql.connect()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             cursor.execute(sql, data)
