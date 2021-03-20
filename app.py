@@ -25,15 +25,15 @@ def addUser():
     connection = None
     cursor = None
     try:
-        username = request.args.get("username")
+        userId = request.args.get("userId")
         firstname = request.args.get("firstname")
         lastname = request.args.get("lastname")
         password = request.args.get("password")
 
         # Validate the received values
         if request.method == 'POST':
-            sql = "INSERT INTO Users(username, firstname, lastname, password) VALUES (%s, %s, %s, %s)"
-            data = (username, firstname, lastname, password)
+            sql = "INSERT INTO Users(userId, firstname, lastname, password) VALUES (%s, %s, %s, %s)"
+            data = (userId, firstname, lastname, password)
             connection = mysql.connect()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             cursor.execute(sql, data)
@@ -63,7 +63,7 @@ def addRoom():
         capacity = request.args.get("floor")
 
         if request.method == 'POST':
-            sql = "insert into Rooms(room_id,floor, capacity) values (%s,%s, %s)"
+            sql = "insert into Rooms(roomId,floor, capacity) values (%s,%s, %s)"
             data = (roomId, floor, capacity)
             connection = mysql.connect()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
@@ -89,7 +89,7 @@ def addBooking():
     connection = None
     cursor = None
     try:
-        username = request.args.get("username")
+        username = request.args.get("userId")
         roomId = request.args.get("roomId")
         bookingDay = request.args.get("bookingDay")
         startTime = request.args.get("startTime")
@@ -99,7 +99,7 @@ def addBooking():
 
         if request.method == 'POST':
             sql = "insert into " \
-                  "RoomBookings(username, room_id, booking_day, start_time, end_time, booked_for, meeting_status) values (%s,%s, %s, %s)"
+                  "RoomBookings(userId, roomId, booking_day, start_time, end_time, booked_for, meeting_status) values (%s,%s, %s, %s)"
             data = (username, roomId, bookingDay, startTime, endTime, bookedFor, meetingStatus)
             connection = mysql.connect()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
@@ -155,7 +155,7 @@ def getRoom(roomId):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM Rooms WHERE room_id=%s", str(roomId))
+        cursor.execute("SELECT * FROM Rooms WHERE roomId=%s", roomId)
         row = cursor.fetchone()
         response = jsonify(row)
         response.status_code = 200
@@ -202,7 +202,7 @@ def getBookingsMadeOnARoom(roomId):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM RoomBookings WHERE room_id=%s", str(roomId))
+        cursor.execute("SELECT * FROM RoomBookings WHERE roomId=%s", roomId)
         row = cursor.fetchone()
         if row is None:
             return 'Room not found'
@@ -241,11 +241,11 @@ def users():
         connection.close()
 
 
-@app.route('/user/<int:username>', methods=['GET'])
-def getUser(username):
+@app.route('/user/<int:userId>', methods=['GET'])
+def getUser(userId):
     """
     Retrieve details of a given user.
-    :param username: 💁 Not Obvious???
+    :param userId: 💁 Not Obvious???
     :return: JSON object💁
     """
     connection = None
@@ -253,7 +253,7 @@ def getUser(username):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM Users WHERE username=%s", str(username))
+        cursor.execute("SELECT * FROM Users WHERE userId=%s", userId)
         row = cursor.fetchone()
         if row is None:
             return 'User not found'
@@ -268,10 +268,10 @@ def getUser(username):
 
 
 @app.route('/user/bookings/<string:username>', methods=['GET'])
-def getBookingsMadeByUser(username):
+def getBookingsMadeByUser(userId):
     """
     Retrieve all bookings made by a given user.
-    :param username:
+    :param userId:
     :return: JSON object💁
     """
     connection = None
@@ -279,7 +279,7 @@ def getBookingsMadeByUser(username):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM Room_bookings WHERE username=%s", username)
+        cursor.execute("SELECT * FROM RoomBookings WHERE userId=%s", userId)
         row = cursor.fetchone()
         if row is None:
             return 'No bookings made by such user'
@@ -296,8 +296,8 @@ def getBookingsMadeByUser(username):
 Delete operations.
 """
 
-@app.route('/users/delete/<string:username>', methods=['DELETE'])
-def deleteUser(username):
+@app.route('/users/delete/<int:userId>', methods=['DELETE'])
+def deleteUser(userId):
     """
     Delete a given user by username
     """
@@ -306,7 +306,7 @@ def deleteUser(username):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        resultValue = cursor.execute("DELETE FROM Users WHERE username = %s", (username,))
+        resultValue = cursor.execute("DELETE FROM Users WHERE userId = %s", (userId,))
         connection.commit()
         if resultValue > 0:
             response = jsonify('{username} deleted successfully!!!')
@@ -320,7 +320,7 @@ def deleteUser(username):
         cursor.close()
         connection.close()
 
-@app.route('/rooms/delete/<string:roomId>', methods=['DELETE'])
+@app.route('/rooms/delete/<int:roomId>', methods=['DELETE'])
 def deleteRoom(roomId):
     """
     Delete a specific room by roomId
@@ -330,7 +330,7 @@ def deleteRoom(roomId):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        resultValue = cursor.execute("DELETE FROM Rooms WHERE room_number = %s", roomId)
+        resultValue = cursor.execute("DELETE FROM Rooms WHERE roomId = %s", roomId)
         connection.commit()
         if resultValue > 0:
             response = jsonify('Room details of room {} deleted Successfully!!!'.format(roomId))
@@ -345,8 +345,8 @@ def deleteRoom(roomId):
         connection.close()
 
 
-@app.route('/bookings/delete/<string:username>', methods=['DELETE'])
-def deleteBookings(username):
+@app.route('/bookings/delete/<int:userId>', methods=['DELETE'])
+def deleteBookings(userId):
     """
     Delete all bookings made by a given user
     """
@@ -355,10 +355,10 @@ def deleteBookings(username):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        resultValue = cursor.execute("DELETE FROM Room_bookings WHERE username = %s", username)
+        resultValue = cursor.execute("DELETE FROM RoomBookings WHERE userId = %s", userId)
         connection.commit()
         if resultValue > 0:
-            response = jsonify('All bookings made by {} Deleted Successfully!!!'.format(username))
+            response = jsonify('All bookings made by {} Deleted Successfully!!!'.format(userId))
             response.status_code = 200
             return response
         else:
@@ -370,7 +370,7 @@ def deleteBookings(username):
         connection.close()
 
 
-@app.route('/bookings/delete <string:roomId>', methods=['DELETE'])
+@app.route('/bookings/delete <int:roomId>', methods=['DELETE'])
 def deleteBooking(roomId):
     """
     Delete all bookings hosted in a specific room
@@ -380,10 +380,10 @@ def deleteBooking(roomId):
     try:
         connection = mysql.connect()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        resultValue = cursor.execute("DELETE FROM Room_bookings WHERE room_number = %s", roomId)
+        resultValue = cursor.execute("DELETE FROM RoomBookings WHERE roomId = %s", roomId)
         connection.commit()
         if resultValue > 0:
-            response = jsonify('All bookings in room {} deleted successfully!!!'.format(roomId))
+            response = jsonify('deleted successfully!!!'.format(roomId))
             response.status_code = 200
             return response
         else:
