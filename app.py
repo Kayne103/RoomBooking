@@ -258,7 +258,7 @@ def getUser(userId):
 """
 Update operations.
 """
-@app.route('/user/update/<int:userId>', methods=['UPDATE'])
+@app.route('/user/update/<int:userId>', methods=['UPDATE', 'PUT'])
 def updateUserPassword(userId):
     """
     Update user password.
@@ -286,7 +286,7 @@ def updateUserPassword(userId):
         cursor.close()
         connection.close()
 
-@app.route('/room/update/<int:roomId>', methods=['UPDATE'])
+@app.route('/room/update/<int:roomId>', methods=['UPDATE', 'PUT'])
 def updateRoomCapacity(roomId):
     """
     Update room capacity.
@@ -314,7 +314,7 @@ def updateRoomCapacity(roomId):
         cursor.close()
         connection.close()
 
-@app.route('/booking/update/<int:bookingId>', methods=['UPDATE'])
+@app.route('/booking/update/<int:bookingId>', methods=['UPDATE', 'PUT'])
 def updateBookingRoomNumber(bookingId):
     """
     Change room number.
