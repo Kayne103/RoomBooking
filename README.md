@@ -5,31 +5,47 @@ users👥 to reserve📆 rooms🏫 for meetings.
 ## Getting Started 🏁🏁
 
 - Fork the repo.
-- clone the repo.
-- Install dependencies.
+- clone💾 the repo.
+- Install📥 dependencies.
 - Open the repo on your preferred IDE, _recommended_ [pycharm](https://www.jetbrains.com/pycharm/).
-- Create a new branch, write your code.
-- Stage, Commit and Push your changes.
+- Create a new🆕 branch, write your code.
+- Stage, Commit💍 and Push♿ your changes.
 - Finally, you can pull request.
 
-### Prerequisites 💡💡
+❌⛔ **DO NOT ADD FILES VIA FILE UPLOAD** ⛔❌
+
+## Application Execution
+### Prerequisites 🛒🛒
 
 Contributors are expected to have knowledge🧠 on one of the following.
-- Flask (Python3)
+- Flask
 - Mysql
 - CRUD API's
+- Python3
+- PIP3
 
-## Built With 🔨🔨
+### Built With 🔨🔨
 
 - [Mysql](https://www.mysql.com/) - For the relational database.
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) - For API implementation.
 
-## Application Execution
-- Check out [Guides](GUIDE.md) for instructions on how to set up the environment and run the application.
+### Execute 🚀🚀
+* First, install all requirements by running the following command:
+  > pip3 install -r requirements.txt
+  
+* Go through [database setup](database_setup.md).
+* After successfully setting up the database and changing the database credentials
+in the [Configurations File](config.py), execute the following command:
+  > python3 app.py
+  
+* The application by default is exposed through port 5000. This can be modified in [Application file](app.py).
+
+### Testing 🤹🤹
+- Go through [guides](GUIDE.md) for available endpoints.
 
 ## Authors 📝📝
 
-- [Osotatanekeeni E. Kari](https://github.com/Osotatanekeeni)
-- [Kaene K. Lebakeng](https://github.com/kayne103)
+- [Osotatanekeeni E. Kari](https://github.com/Osotatanekeeni) - _Project Manager_
+- [Kaene K. Lebakeng](https://github.com/kayne103) - _Developer_
 - [Anesu Banda](https://github.com/nebzz)
 - [Oarabile Mwiya](https://github.com/OarabileMwiya)

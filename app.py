@@ -23,6 +23,9 @@ Specifies all the endpoints and how to send requests.
 """
 @app.route('/guide')
 def guide():
+    """
+    Renders GUIDE.md as an html file.
+    """
     guide_md = open("GUIDE.md", "r")
     md_template_string = markdown.markdown(
         guide_md.read(), extensions=["fenced_code"]
@@ -436,4 +439,4 @@ Run app.
 """
 if __name__ == '__main__':
 
-    app.run(threaded=True, port=5000)
+    app.run(threaded=True, port=5000) # You can change the port.
