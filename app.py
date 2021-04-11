@@ -1,12 +1,16 @@
 from flask import request, jsonify
-from  config import app, mysql
+from  config import app, mysql, jwt_required
 import pymysql
+import markdown
+import markdown.extensions.fenced_code
+
 
 """
 Root endpoint.
 It doesnt matter in the API design.
 """
 @app.route('/')
+@jwt_required()
 def index():
     """
     This is the root endpoint.
@@ -14,6 +18,16 @@ def index():
     """
     return "<h1>Welcome to Cookie Session Room Booking API!!</h1>"
 
+"""
+Specifies all the endpoints and how to send requests.
+"""
+@app.route('/guide')
+def guide():
+    guide_md = open("GUIDE.md", "r")
+    md_template_string = markdown.markdown(
+        guide_md.read(), extensions=["fenced_code"]
+    )
+    return md_template_string
 """
 Create operations
 """
@@ -406,7 +420,7 @@ def deleteBooking(bookingId):
         resultValue = cursor.execute("DELETE FROM RoomBookings WHERE bookingId = %s", bookingId)
         connection.commit()
         if resultValue > 0:
-            response = jsonify('Booking deleted Successfully!!!'.format(userId))
+            response = jsonify('Booking deleted Successfully!!!'.format(bookingId))
             response.status_code = 200
             return response
         else:
