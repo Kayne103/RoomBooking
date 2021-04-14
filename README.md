@@ -1,4 +1,4 @@
-# Room Booking🏫 API 🤖
+# Room Booking🏫 API
 * This CRUD API serves as part of the **Room Booking System (RBS)** that allows
 users👥 to reserve📆 rooms🏫 for meetings.
 
@@ -29,6 +29,11 @@ Contributors are expected to have knowledge🧠 on one of the following.
 - [Mysql](https://www.mysql.com/) - For the relational database.
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) - For API implementation.
 
+### Interpreter 🤖🤖
+* [Python 3.8](https://www.python.org/downloads/) 🐍🐍
+* We assume that you already have [virtualenv](https://virtualenv.pypa.io/en/latest/) installed.
+  * Activate the virtualenv
+    > venv source/bin/activate
 ### Execute 🚀🚀
 * First, install all requirements by running the following command:
   > pip3 install -r requirements.txt

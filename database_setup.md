@@ -23,7 +23,7 @@ If not, check out: [How to install MySql Server](https://dev.mysql.com/doc/mysql
     );
 
     >create table if not exists Users(
-        username varchar(15),
+        userId varchar(15),
         firstname varchar(15) not null,
         lastname varchar(15) not null,
         password varchar(45) not null,
@@ -31,16 +31,16 @@ If not, check out: [How to install MySql Server](https://dev.mysql.com/doc/mysql
     );
 
     >create table if not exists Rooms(
-        room_id varchar(8) ,
+        roomId varchar(8) ,
         floor int not null check ( floor >= 0 ),
         capacity int not null check ( capacity > 0 ),
-        primary key (room_id)
+        primary key (roomId)
     );
 
     >create table if not exists RoomBookings(
        bookingId int auto_increment,
-       userId int,
-       roomId int,
+       userId varchar(15),
+       roomId varchar(8),
        primary key (bookingId),
        foreign key (userId) references Users(userId) on delete cascade,
        foreign key (roomId) references Rooms(roomId) on delete cascade
