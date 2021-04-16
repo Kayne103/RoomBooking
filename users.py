@@ -1,31 +1,22 @@
-from werkzeug.security import safe_str_cmp
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(object):
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
-
-    def __str__(self):
-        return "User(id='%s')" % self.id
+auth = HTTPBasicAuth()
 
 """
-List of users with access to the API.
-For a large system, users will have to be stored in a database.
+Registered users with access to the API.
+For a large system, this information has to stored in a database.
 """
-users = [
-    User(1, "cookie", "cookie")
-]
+users = {
+    # username : password
+    "cookie": generate_password_hash("cookie") # Hash passwords, saving passwords in plain text is old age and Facebook stuff.
+}
 
-username_table = {u.username: u for u in users} # Get only usernames.
-userid_table = {u.id: u for u in users} # Get only Id's.
-
-def authenticate(username, password):
-    user = username_table.get(username, None) # Check the given username in the list of registered users.
-    if user and safe_str_cmp(user.password.encode("utf-8"), password.encode("utf-8")):
-        return user
-
-def identity(payload):
-    user_id = payload["identity"]
-    return userid_table.get(user_id, None)
-
+@auth.verify_password
+def verify_password(username, password):
+    """
+    Check if the user credentials are registered.
+    """
+    if username in users and \
+            check_password_hash(users.get(username), password):
+        return username

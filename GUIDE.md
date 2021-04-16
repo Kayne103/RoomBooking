@@ -6,6 +6,16 @@ E.g.
   > 
     And the request method should be specified.
 
+![Header image](postman.png)
+
+## Authentication
+* All endpoints are protected except the root and /guide endpoint.
+    Here are registered username and password.
+  > username: cookie
+  > 
+  > password: cookie 
+* Select **Basic Auth** in the authorization tab to input username and password.
+
 # Endpoints
 1. Registering a new RBS user.
     * Method: POST

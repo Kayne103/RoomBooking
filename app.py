@@ -1,16 +1,13 @@
 from flask import request, jsonify
-from  config import app, mysql, jwt_required
-import pymysql
-import markdown
-import markdown.extensions.fenced_code
-
+from  config import app, mysql
+import pymysql, markdown, markdown.extensions.fenced_code
+from users import auth
 
 """
 Root endpoint.
 It doesnt matter in the API design.
 """
 @app.route('/')
-@jwt_required()
 def index():
     """
     This is the root endpoint.
@@ -35,6 +32,7 @@ def guide():
 Create operations
 """
 @app.route('/user/add', methods=['POST'])
+@auth.login_required()
 def addUser():
     """
     Create a new user
@@ -67,6 +65,7 @@ def addUser():
         connection.close()
 
 @app.route('/room/add', methods=['POST'])
+@auth.login_required()
 def addRoom():
     """
     Create a new room.
@@ -97,6 +96,7 @@ def addRoom():
         connection.close()
 
 @app.route('/booking/add', methods=['POST'])
+@auth.login_required()
 def addBooking():
     """
     Create a new room booking
@@ -130,6 +130,7 @@ def addBooking():
 Read operations.
 """
 @app.route('/rooms', methods=['GET'])
+@auth.login_required()
 def getAllRooms():
     """
     Retrieve details of all rooms.
@@ -153,6 +154,7 @@ def getAllRooms():
         connection.close()
 
 @app.route('/rooms/<int:roomId>', methods=['GET'])
+@auth.login_required()
 def getRoom(roomId):
     """
     Retrieve all details of a given room.
@@ -176,6 +178,7 @@ def getRoom(roomId):
         connection.close()
 
 @app.route('/bookings', methods=['GET'])
+@auth.login_required()
 def getAllBookings():
     """
     Retrieve details of all bookings
@@ -198,6 +201,7 @@ def getAllBookings():
         connection.close()
 
 @app.route('/room/bookings/<int:roomId>', methods=['GET'])
+@auth.login_required()
 def getBookingsMadeOnARoom(roomId):
     """
     Retrieve booking details made on a given room.
@@ -224,6 +228,7 @@ def getBookingsMadeOnARoom(roomId):
         connection.close()
 
 @app.route('/users', methods=['GET'])
+@auth.login_required()
 def getAllUsers():
     """
     Retrieve all users.
@@ -248,6 +253,7 @@ def getAllUsers():
         connection.close()
 
 @app.route('/user/<int:userId>', methods=['GET'])
+@auth.login_required()
 def getUser(userId):
     """
     Retrieve details of a given user.
@@ -276,6 +282,7 @@ def getUser(userId):
 Update operations.
 """
 @app.route('/user/update/<int:userId>', methods=['UPDATE', 'PUT'])
+@auth.login_required()
 def updateUserPassword(userId):
     """
     Update user password.
@@ -304,6 +311,7 @@ def updateUserPassword(userId):
         connection.close()
 
 @app.route('/room/update/<int:roomId>', methods=['UPDATE', 'PUT'])
+@auth.login_required()
 def updateRoomCapacity(roomId):
     """
     Update room capacity.
@@ -332,6 +340,7 @@ def updateRoomCapacity(roomId):
         connection.close()
 
 @app.route('/booking/update/<int:bookingId>', methods=['UPDATE', 'PUT'])
+@auth.login_required()
 def updateBookingRoomNumber(bookingId):
     """
     Change room number.
@@ -363,6 +372,7 @@ def updateBookingRoomNumber(bookingId):
 Delete operations.
 """
 @app.route('/users/delete/<int:userId>', methods=['DELETE'])
+@auth.login_required()
 def deleteUser(userId):
     """
     Delete a given user
@@ -387,6 +397,7 @@ def deleteUser(userId):
         connection.close()
 
 @app.route('/rooms/delete/<int:roomId>', methods=['DELETE'])
+@auth.login_required()
 def deleteRoom(roomId):
     """
     Delete a specific room by roomId
@@ -411,6 +422,7 @@ def deleteRoom(roomId):
         connection.close()
 
 @app.route('/bookings/delete/<int:bookingId>', methods=['DELETE'])
+@auth.login_required()
 def deleteBooking(bookingId):
     """
     Delete all bookings made by a given user
@@ -439,4 +451,4 @@ Run app.
 """
 if __name__ == '__main__':
 
-    app.run(threaded=True, port=5000) # You can change the port.
+    app.run(threaded=True, port=5000)
