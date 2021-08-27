@@ -1,6 +1,8 @@
 from flask import request, jsonify
 from  config import app, mysql
-import pymysql, markdown, markdown.extensions.fenced_code
+import pymysql
+import markdown
+import markdown.extensions.fenced_code
 from users import auth
 
 """
@@ -57,8 +59,7 @@ def addUser():
             response = jsonify('User Added Successfully!!!')
             response.status_code = 200
             return response
-        else:
-            return 'Nothing has happened'
+        return 'Nothing has happened'
     except Exception as e:
         print(e)
     finally:
@@ -302,8 +303,7 @@ def updateUserPassword(userId):
             response = jsonify('Password updated successfully!')
             response.status_code = 200
             return response
-        else:
-            return None
+        return None
     except Exception as e:
         print(e)
     finally:
@@ -331,8 +331,7 @@ def updateRoomCapacity(roomId):
             response = jsonify('Room updated successfully!')
             response.status_code = 200
             return response
-        else:
-            return None
+        return None
     except Exception as e:
         print(e)
     finally:
@@ -360,8 +359,7 @@ def updateBookingRoomNumber(bookingId):
             response = jsonify('Booking updated successfully!')
             response.status_code = 200
             return response
-        else:
-            return None
+        return None
     except Exception as e:
         print(e)
     finally:
@@ -388,8 +386,7 @@ def deleteUser(userId):
             response = jsonify('deleted successfully!!!')
             response.status_code = 200
             return response
-        else:
-            return 'No such user exists...'
+        return 'No such user exists...'
     except Exception as e:
         print(e)
     finally:
@@ -413,8 +410,7 @@ def deleteRoom(roomId):
             response = jsonify('Room deleted Successfully!!!'.format(roomId))
             response.status_code = 200
             return response
-        else:
-            return 'No such room exists...'
+        return 'No such room exists...'
     except Exception as e:
         print(e)
     finally:
@@ -438,8 +434,7 @@ def deleteBooking(bookingId):
             response = jsonify('Booking deleted Successfully!!!'.format(bookingId))
             response.status_code = 200
             return response
-        else:
-            return 'No such booking'
+        return 'No such booking'
     except Exception as e:
         print(e)
     finally:
