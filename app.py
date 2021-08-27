@@ -1,6 +1,8 @@
 from flask import request, jsonify
 from  config import app, mysql
-import pymysql, markdown, markdown.extensions.fenced_code
+import pymysql
+import markdown
+import markdown.extensions.fenced_code
 from users import auth
 
 """
