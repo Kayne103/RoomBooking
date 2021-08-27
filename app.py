@@ -13,7 +13,7 @@ def index():
     This is the root endpoint.
     :return: The landing page 🛬 of the platform.
     """
-    return "<h1>Welcome to Cookie Session Room Booking API!!</h1>"
+    return jsonify("Welcome to Cookie Session Room Booking API!!")
 
 """
 Specifies all the endpoints and how to send requests.
@@ -32,6 +32,7 @@ def guide():
 Create operations
 """
 @app.route('/user/add', methods=['POST'])
+@auth.login_required()
 @auth.login_required()
 def addUser():
     """
@@ -130,7 +131,6 @@ def addBooking():
 Read operations.
 """
 @app.route('/rooms', methods=['GET'])
-@auth.login_required()
 def getAllRooms():
     """
     Retrieve details of all rooms.
